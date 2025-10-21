@@ -1,7 +1,7 @@
 // Step 4: Improved `User` Model (with UUID and Mongoose)
 
-const mongoose = require("mongoose");
-const { v4: uuidv4 } = require("uuid");  // import and alias uuid.v4() correctly
+import mongoose from "mongoose";
+import { v4 as uuidv4 } from "uuid";  // import and alias uuid.v4() correctly
 
 // Define the User schema
 const userSchema = new mongoose.Schema(
@@ -29,6 +29,4 @@ const userSchema = new mongoose.Schema(
 );
 
 // Create and export the User model
-const User = mongoose.model("User", userSchema, "users");
-
-module.exports = { User };   // corrected 'modules.exports' → 'module.exports'
+export const User = mongoose.model("User", userSchema, "users");

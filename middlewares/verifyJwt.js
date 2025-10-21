@@ -1,7 +1,7 @@
 // backend/middlewares/verifyJwt.js
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-function verifyJwt(req, res, next) {
+export function verifyJwt(req, res, next) {
   // Read token from cookie instead of headers
   const token = req.cookies?.authToken;
 
@@ -17,5 +17,3 @@ function verifyJwt(req, res, next) {
     return res.status(403).json({ error: "Invalid token" });
   }
 }
-
-module.exports = { verifyJwt };

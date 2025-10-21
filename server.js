@@ -1,9 +1,9 @@
-const { initializeDatabase } = require("./db/db.connect");
-const express = require("express");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const googleAuthRoutes = require("./routes/googleAuth");
-const { verifyJwt } = require("./middlewares/verifyJwt");
+import { initializeDatabase } from "./db/db.connect.js";
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import googleAuthRoutes from "./routes/googleAuth.js";
+import { verifyJwt } from "./middlewares/verifyJwt.js";
 
 initializeDatabase();
 const app = express();

@@ -1,10 +1,10 @@
 
 // routes/googleAuth.js
 
-const express = require("express");
-const axios = require("axios");
-const { User } = require("../models/user.models");
-const jwt = require("jsonwebtoken");
+import express from "express";
+import axios from "axios";
+import { User } from "../models/user.models.js";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -88,4 +88,4 @@ router.post("/logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
-module.exports = router;
+export default router;
