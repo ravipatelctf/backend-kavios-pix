@@ -31,8 +31,8 @@ app.get("/auth/check", verifyJwt, (req, res) => {
 });
 
 
-// example protected route
-app.get("/", verifyJwt, (req, res) => {
+// Home route
+app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to KaviosPix REST API Server." });
 });
 
