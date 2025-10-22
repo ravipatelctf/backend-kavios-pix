@@ -75,7 +75,7 @@ router.get("/google/callback", async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard?email=${email}`);
 
   } catch (error) {
     console.error("OAuth error:", error.message);
@@ -85,10 +85,13 @@ router.get("/google/callback", async (req, res) => {
 
 // Step 3: Logout route to clear cookie
 router.post("/logout", (req, res) => {
-  res.cookie("authToken", "", {
-    expires: new Date(0), // immediately expires
+  res.clearCookie("authToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none"
   });
   res.json({ message: "Logged out successfully" });
 });
+
 
 export default router;
