@@ -69,6 +69,9 @@ router.get("/google/callback", async (req, res) => {
 
     // Example in backend callback
     res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
