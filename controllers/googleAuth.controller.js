@@ -1,0 +1,94 @@
+
+// routes/googleAuth.controller.js
+
+import axios from "axios";
+import { User } from "../models/user.models.js";
+import jwt from "jsonwebtoken";
+
+const GOOGLE_AUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth`;
+const GOOGLE_TOKEN_URL = `https://oauth2.googleapis.com/token`;
+const GOOGLE_USER_INFO_URL = `https://www.googleapis.com/oauth2/v3/userinfo`;
+
+// Step 1: Redirect to Google's OAuth 2.0 consent page
+export const googleLogin = (req, res) => {
+  const params = new URLSearchParams({
+    client_id: process.env.GOOGLE_CLIENT_ID,
+    redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+    response_type: "code",
+    scope: "openid email profile",
+    access_type: "offline",
+    prompt: "consent",
+  });
+  return res.redirect(`${GOOGLE_AUTH_URL}?${params.toString()}`);
+};
+
+// Step 2: Handle the OAuth2 callback from Google
+export const googleCallback = async (req, res) => {
+  const code = req.query.code;
+
+  if (!code) {
+    return res.status(400).json({ error: "Authorization code not provided" });
+  }
+
+  try {
+    // Exchange code for access token
+    const tokenResponse = await axios.post(GOOGLE_TOKEN_URL, new URLSearchParams({
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+        grant_type: "authorization_code",
+        code,
+      }),
+      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+    );
+
+    const { access_token } = tokenResponse.data;
+
+    // Fetch user info using the access token
+    const userInfo = await axios.get(GOOGLE_USER_INFO_URL, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    const { email } = userInfo.data;
+
+    // Check if user exists or create one
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({ email });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user.userId, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    // Example in backend callback
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard?email=${email}`);
+
+  } catch (error) {
+    console.error("OAuth error:", error.message);
+    res.status(500).json({ error: "Failed to authenticate with Google" });
+  }
+};
+
+// Step 3: Logout route to clear cookie
+export const logout = (req, res) => {
+  res.clearCookie("authToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none"
+  });
+  res.json({ message: "Logged out successfully" });
+};
+
