@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import googleAuthRoutes from "./routes/googleAuth.js";
+import albumRoutes from "./routes/album.routes.js";
 import { verifyJwt } from "./middlewares/verifyJwt.js";
 
 initializeDatabase();
@@ -24,6 +25,8 @@ app.use(
 
 // mount oauth routes
 app.use("/auth", googleAuthRoutes);
+
+app.use("/albums", albumRoutes);
 
 // Auth check route
 app.get("/auth/check", verifyJwt, (req, res) => {
