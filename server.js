@@ -9,9 +9,6 @@ import { verifyJwt } from "./middlewares/verifyJwt.js";
 initializeDatabase();
 const app = express();
 
-// parse JSON body
-app.use(express.json());
-
 // parse cookies
 app.use(cookieParser());
 
@@ -36,7 +33,7 @@ app.get("/auth/check", verifyJwt, (req, res) => {
 
 // Home route
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "Welcome to KaviosPix REST API Server." });
+  res.status(200).send({ message: "Welcome to KaviosPix REST API Server." });
 });
 
 app.listen(process.env.PORT, () => {

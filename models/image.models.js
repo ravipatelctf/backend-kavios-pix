@@ -10,18 +10,24 @@ const imageSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // imageName: {
-    //     type: String,
-    //     required: true,
-    // },
-    // tags: [{
-    //     type: String,
-    //     default: []
-    // }],
-    // size: {
-    //     type: Number,
-    //     required: true,
-    // }
+    size: {
+        type: Number
+    },
+    imageName: {
+        type: String,
+    },
+    tags: [{
+        type: String,
+        default: [],
+    }],
+    isFavourite: {
+        type: Boolean,
+        default: false
+    },
+    comments: [{
+        type: String,
+        default: [],
+    }]
 }, {
     timestamps: true,
 });

@@ -10,6 +10,7 @@ cloudinary.config({
 
 export const uploadImage = async (req, res) => {
     const { albumId } = req.params;
+    const { imageName, tags, isFavorite, comments } = req.body;
     try {
         const file = req.file;
         if (!file) {
@@ -20,7 +21,7 @@ export const uploadImage = async (req, res) => {
         console.log("result:", result);
 
         // Save to mongoDB
-        const newImage = new Image({albumId, imageUrl: result.secure_url});
+        const newImage = new Image({albumId, imageUrl: result.secure_url, size: result.bytes, imageName, tags, isFavorite, comments});
         await newImage.save();
 
         res.status(200).json({message: "Image uploaded successfully.", imageUrl: result.secure_url});
