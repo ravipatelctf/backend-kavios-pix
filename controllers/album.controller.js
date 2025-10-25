@@ -4,7 +4,7 @@ import { Album } from "../models/album.models.js";
 export const createAlbum = async (req, res) => {
     const { name, description, ownerId } = req.body;
     try {
-        const newAlbum = new Album({ name, description, ownerId, sharedUsers: [] });
+        const newAlbum = new Album({ name, description, ownerId });
         await newAlbum.save();
         res.status(201).json({message: "Album created successfully."});
     } catch (error) {
@@ -20,18 +20,31 @@ export const getAllAlbums = async (req, res) => {
         if (!allAlbums) {
             return res.status(404).json({error: "Albums Not Found."});
         }
-        res.status(200).json({message: "Albums fetched successfully.", data: allAlbums});
+        res.status(200).json({message: "Albums data fetched successfully.", data: allAlbums});
     } catch (error) {
-        res.status(500).json({error: "Failed to fetch albums."});
+        res.status(500).json({error: "Failed to fetch albums data."});
+    }
+}
+
+// find by id
+export const getAlbumById = async (req, res) => {
+    try {
+        const targetAlbum = await Album.findById(req.params.albumId);
+        if (!targetAlbum) {
+            return res.status(404).json({error: "Album Not Found."});
+        }
+        res.status(200).json({message: "Album data fetched successfully.", data: targetAlbum});
+    } catch (error) {
+        res.status(500).json({error: "Failed to fetch album data."});
     }
 }
 
 // Update
 export const updateAlbumById = async (req, res) => {
     const { albumId } = req.params;
-    const { name, description, ownerId } = req.body;
+    const { name, description } = req.body;
     try {
-        const updatedAlbum = await Album.findByIdAndUpdate(albumId, { name, description, ownerId, sharedUsers: [] });
+        const updatedAlbum = await Album.findByIdAndUpdate(albumId, { name, description }, {new: true});
         if (!updatedAlbum) {
             return res.status(404).json({error: "Album Not Found"});
         }

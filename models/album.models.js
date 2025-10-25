@@ -14,10 +14,7 @@ const albumSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
-    },
-    sharedUsers: [{
-        type: String,
-    }]
+    }
   },
   {
     timestamps: true,
