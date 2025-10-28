@@ -1,6 +1,6 @@
 import express from "express";
 import { createAlbum, getAllAlbums, updateAlbumById, deleteAlbumById, getAlbumById } from "../controllers/album.controller.js";
-import { uploadImage, getAllImagesByAlbumId } from "../controllers/image.controllers.js";
+import { uploadImage, getAllImagesByAlbumId, getImageById } from "../controllers/image.controllers.js";
 import multer from "multer";
 
 
@@ -26,6 +26,8 @@ router.get("/:albumId", getAlbumById);
 
 // get all images by albumId
 router.get("/:albumId/images", getAllImagesByAlbumId);
+
+router.get("/:albumId/images/:imageId", getImageById);
 
 // Update
 router.put("/:albumId", updateAlbumById);

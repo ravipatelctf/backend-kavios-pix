@@ -44,3 +44,17 @@ export const getAllImagesByAlbumId = async (req, res) => {
         res.status(500).json({error: "Failed to fetch images."});
     }
 }
+
+export const getImageById = async (req, res) => {
+    const { imageId } = req.params;
+    try {
+        const targetImage = await Image.findById(imageId);
+        if (!targetImage) {
+            return res.status(404).json({error: "No image found."});
+        }
+        res.status(200).send(targetImage);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Failed to fetch image."});
+    }
+}
