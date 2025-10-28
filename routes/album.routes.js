@@ -7,7 +7,7 @@ import multer from "multer";
 const router = express.Router();
 
 // Multer setup
-const storage = multer.diskStorage({});
+const storage = multer.memoryStorage({});
 const upload = multer({ storage });
 
 // Create

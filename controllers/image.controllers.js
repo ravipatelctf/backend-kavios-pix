@@ -16,15 +16,49 @@ export const uploadImage = async (req, res) => {
         if (!file) {
             res.status(400).send("No file uploaded")
         }
-        // Upload to cloudinary
-        const result = await cloudinary.uploader.upload(file.path, {folder: "uploads"});
-        console.log("result:", result);
+        // // Upload to cloudinary
+        // const result = await cloudinary.uploader.upload(file.path, {folder: "uploads"});
+        // console.log("result:", result);
 
-        // Save to mongoDB
-        const newImage = new Image({albumId, imageUrl: result.secure_url, size: result.bytes, imageName, tags, isFavorite, comments});
-        await newImage.save();
+        // // Save to mongoDB
+        // const newImage = new Image({albumId, imageUrl: result.secure_url, size: result.bytes, imageName, tags, isFavorite, comments});
+        // await newImage.save();
 
-        res.status(200).json({message: "Image uploaded successfully.", imageUrl: result.secure_url});
+        // res.status(200).json({message: "Image uploaded successfully.", imageUrl: result.secure_url});
+
+        // ---
+        // Upload to Cloudinary via buffer (serverless friendly)
+        const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: "uploads" },
+        async (error, result) => {
+            if (error) {
+            console.error("Cloudinary upload error:", error);
+            return res.status(500).json({ message: "Cloudinary upload failed" });
+            }
+
+            // Save to MongoDB
+            const newImage = new Image({
+                albumId,
+                imageUrl: result.secure_url,
+                size: result.bytes,
+                imageName,
+                tags,
+                isFavorite,
+                comments,
+            });
+
+            await newImage.save();
+
+            res.status(200).json({
+                message: "Image uploaded successfully",
+                imageUrl: result.secure_url,
+            });
+        }
+        );
+
+        uploadStream.end(file.buffer);
+
+        // ---
     } catch (error) {
         res.status(500).json({message: "Image upload failed.", error: error});
     }
