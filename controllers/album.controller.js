@@ -2,6 +2,7 @@ import { Album } from "../models/album.models.js";
 
 // Create
 export const createAlbum = async (req, res) => {
+    console.log("req.body:", req.body);
     const { name, description, ownerId } = req.body;
     try {
         const newAlbum = new Album({ name, description, ownerId });

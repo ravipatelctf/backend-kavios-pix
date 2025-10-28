@@ -9,6 +9,8 @@ import { verifyJwt } from "./middlewares/verifyJwt.js";
 initializeDatabase();
 const app = express();
 
+app.use(express.json())
+
 // parse cookies
 app.use(cookieParser());
 
