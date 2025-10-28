@@ -16,6 +16,8 @@ router.post("/", createAlbum);
 // upload image to a album
 router.post("/:albumId/images", upload.single("image"), uploadImage);
 
+router.use(express.json());
+
 // Read
 router.get("/", getAllAlbums);
 
