@@ -25,7 +25,7 @@ app.use(
 // mount oauth routes
 app.use("/auth", googleAuthRoutes);
 
-app.use("/albums", verifyJwt, albumRoutes);
+app.use("/albums", albumRoutes);
 
 // Auth check route
 app.get("/auth/check", verifyJwt, (req, res) => {
