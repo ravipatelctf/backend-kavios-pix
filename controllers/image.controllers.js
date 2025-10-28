@@ -26,6 +26,7 @@ export const uploadImage = async (req, res) => {
 
         res.status(200).json({message: "Image uploaded successfully.", imageUrl: result.secure_url});
     } catch (error) {
+        console.error("Image upload failed:", error);
         res.status(500).json({message: "Image upload failed.", error: error});
     }
 }
