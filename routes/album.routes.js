@@ -7,7 +7,7 @@ import multer from "multer";
 const router = express.Router();
 
 // Multer setup
-const storage = multer.memoryStorage({});
+const storage = multer.diskStorage({});
 const upload = multer({ storage });
 
 // Create
@@ -15,8 +15,6 @@ router.post("/", createAlbum);
 
 // upload image to a album
 router.post("/:albumId/images", upload.single("image"), uploadImage);
-
-router.use(express.json());
 
 // Read
 router.get("/", getAllAlbums);
