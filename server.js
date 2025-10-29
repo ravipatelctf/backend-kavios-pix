@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import googleAuthRoutes from "./routes/googleAuth.js";
 import albumRoutes from "./routes/album.routes.js";
+import imageRoutes from "./routes/image.routes.js";
 import { verifyJwt } from "./middlewares/verifyJwt.js";
 
 initializeDatabase();
@@ -26,6 +27,7 @@ app.use(
 app.use("/auth", googleAuthRoutes);
 
 app.use("/albums", verifyJwt, albumRoutes);
+app.use("/images", verifyJwt, imageRoutes);
 
 // Auth check route
 app.get("/auth/check", verifyJwt, (req, res) => {

@@ -74,7 +74,7 @@ export const googleCallback = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.redirect(`${process.env.FRONTEND_URL}/dashboard?email=${email}`);
+    res.redirect(`${process.env.FRONTEND_URL}/albums?email=${email}`);
 
   } catch (error) {
     console.error("OAuth error:", error.message);
