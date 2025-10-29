@@ -59,3 +59,30 @@ export const getImageById = async (req, res) => {
         res.status(500).json({error: "Failed to fetch image."});
     }
 }
+
+
+export const getAllImages = async (req, res) => {
+    try {
+        const allImages = await Image.find();
+        if (!allImages) {
+            return res.status(404).json({error: "No image found."});
+        }
+        res.status(200).send(allImages);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Failed to fetch images."});
+    }
+}
+
+export const getAllFavoriteImages = async (req, res) => {
+    try {
+        const favoriteImages = await Image.find({isFavourite: true});
+        if (!favoriteImages) {
+            return res.status(404).json({error: "No image found."});
+        }
+        res.status(200).send(favoriteImages);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Failed to fetch favorite images."});
+    }
+}
