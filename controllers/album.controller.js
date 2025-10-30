@@ -23,6 +23,7 @@ export const getAllAlbums = async (req, res) => {
         }
         res.status(200).json({message: "Albums data fetched successfully.", data: allAlbums});
     } catch (error) {
+        console.error(error)
         res.status(500).json({error: "Failed to fetch albums data."});
     }
 }
@@ -36,6 +37,7 @@ export const getAlbumById = async (req, res) => {
         }
         res.status(200).json({message: "Album data fetched successfully.", data: targetAlbum});
     } catch (error) {
+        console.error(error)
         res.status(500).json({error: "Failed to fetch album data."});
     }
 }
@@ -51,6 +53,7 @@ export const updateAlbumById = async (req, res) => {
         }
         res.status(200).json({message: "Album updated successfully", data: updatedAlbum});
     } catch (error) {
+        console.error(error)
         res.status(500).json({error: "Failed to update album."});
     }
 }
@@ -66,6 +69,7 @@ export const deleteAlbumById = async (req, res) => {
         }
         res.status(200).json({message: "Album deleted successfully."});
     } catch (error) {
+        console.error(error)
         res.status(500).json({error: "Failed to delete album."});
     }
 }
