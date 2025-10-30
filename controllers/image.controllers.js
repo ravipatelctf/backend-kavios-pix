@@ -74,7 +74,7 @@ export const getAllImages = async (req, res) => {
     }
 }
 
-export const getAllFavoriteImages = async (req, res) => {
+export const getAllFavouriteImages = async (req, res) => {
     try {
         const favoriteImages = await Image.find({isFavourite: true});
         if (!favoriteImages) {
@@ -84,5 +84,20 @@ export const getAllFavoriteImages = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({error: "Failed to fetch favorite images."});
+    }
+}
+
+export const toggleIsFavourite = async (req, res) => {
+    const { imageId } = req.params;
+    const { isFavourite } = req.body;
+    try {
+        const updatedImage = await Image.findByIdAndUpdate(imageId, {isFavourite}, {new: true});
+        if (!updatedImage) {
+            return res.status(404).json({error: "No image found."});
+        }
+        res.status(200).send(updatedImage);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Failed to update image."});
     }
 }
