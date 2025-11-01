@@ -56,7 +56,8 @@ export const googleCallback = async (req, res) => {
     // Check if user exists or create one
     let user = await User.findOne({ email });
     if (!user) {
-      user = await User.create({ email });
+      newUser = new User({email});
+      await newUser.save();
     }
 
     // Generate JWT token
