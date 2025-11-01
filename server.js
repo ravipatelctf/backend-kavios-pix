@@ -7,7 +7,9 @@ import albumRoutes from "./routes/album.routes.js";
 import imageRoutes from "./routes/image.routes.js";
 import { verifyJwt } from "./middlewares/verifyJwt.js";
 
-initializeDatabase();
+
+
+
 const app = express();
 
 app.use(express.json())
@@ -40,6 +42,20 @@ app.get("/", (req, res) => {
   res.status(200).send({ message: "Welcome to KaviosPix REST API Server." });
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on PORT:${process.env.PORT}`);
-});
+async function startServer() {
+  try {
+    console.log("Initializing database connection...");
+    await initializeDatabase();
+    
+    console.log("Starting Express server...");
+    app.listen(process.env.PORT, () => {
+      console.log(`Server is running on PORT:${process.env.PORT}`);
+      console.log("Server is ready to accept requests!");
+    });
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1);
+  }
+}
+
+await startServer();

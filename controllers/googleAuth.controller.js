@@ -39,7 +39,7 @@ export const googleCallback = async (req, res) => {
         grant_type: "authorization_code",
         code,
       }),
-      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+      { headers: { "Content-Type": "application/x-www-form-urlencoded" }, timeout: 10000 }
     );
 
     const { access_token } = tokenResponse.data;
@@ -56,26 +56,28 @@ export const googleCallback = async (req, res) => {
     // Check if user exists or create one
     let user = await User.findOne({ email });
     if (!user) {
-      newUser = new User({email});
-      await newUser.save();
+      user = new User({email});
+      await user.save();
+      console.log("New User created.")
+    } else {
+      console.log("Existing user logged in:", email);
     }
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user.userId, email: user.email },
+      { userId: user._id.toString(), email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
     // Example in backend callback
     res.cookie("authToken", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: process.env.NODE_ENV === "production", // Only secure in production
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.redirect(`${process.env.FRONTEND_URL}/albums?email=${email}`);
+    res.redirect(`${process.env.FRONTEND_URL}/albums?email=${encodeURIComponent(email)}`);
 
   } catch (error) {
     console.error("OAuth error:", error.message);
@@ -87,8 +89,8 @@ export const googleCallback = async (req, res) => {
 export const logout = (req, res) => {
   res.clearCookie("authToken", {
     httpOnly: true,
-    secure: true,
-    sameSite: "none"
+    secure: process.env.NODE_ENV === "production", // Only secure in production
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
   res.json({ message: "Logged out successfully" });
 };
