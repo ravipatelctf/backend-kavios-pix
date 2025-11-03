@@ -30,7 +30,7 @@ router.get("/:albumId/images", getAllImagesByAlbumId);
 router.get("/:albumId/images/:imageId", getImageById);
 
 // Update
-router.put("/:albumId", updateAlbumById);
+router.post("/:albumId", updateAlbumById);
 
 // Delete
 router.delete("/:albumId", deleteAlbumById);

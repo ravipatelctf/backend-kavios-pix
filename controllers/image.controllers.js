@@ -64,6 +64,7 @@ export const getImageById = async (req, res) => {
 export const getAllImages = async (req, res) => {
     try {
         const allImages = await Image.find({ownerId: req.user.userId});
+        console.log("allImages:", allImages);
         if (!allImages) {
             return res.status(404).json({error: "No image found."});
         }
@@ -99,5 +100,19 @@ export const toggleIsFavourite = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({error: "Failed to update image."});
+    }
+}
+
+export const deleteImageById = async (req, res) => {
+    const { imageId } = req.params;
+    try {
+        const deletedImage = await Image.findByIdAndDelete(imageId);
+        if (!deletedImage) {
+            return res.status(404).json({message: "Image not Found!"});
+        }
+        res.status(200).json({message: "Image deleted succesfully."});
+    } catch (error) {
+        console.error("Failed to delete image:", error);
+        res.status(500).json({message: "Failed to delete image."});
     }
 }

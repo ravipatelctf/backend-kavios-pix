@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllImages, getAllFavouriteImages, toggleIsFavourite } from "../controllers/image.controllers.js";
+import { getAllImages, getAllFavouriteImages, toggleIsFavourite, deleteImageById } from "../controllers/image.controllers.js";
 
 const router = express();
 
@@ -7,5 +7,6 @@ const router = express();
 router.get("/", getAllImages);
 router.get("/favourites", getAllFavouriteImages);
 router.post("/:imageId/favourite", toggleIsFavourite);
+router.delete("/:imageId", deleteImageById);
 
 export default router;
