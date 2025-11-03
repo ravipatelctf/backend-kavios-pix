@@ -6,6 +6,11 @@ const imageSchema = new mongoose.Schema({
         ref: "Album",
         required: true,
     },
+    ownerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
     imageUrl: {
         type: String,
         required: true,

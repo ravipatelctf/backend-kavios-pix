@@ -1,11 +1,14 @@
 import { Album } from "../models/album.models.js";
-
+import { User } from "../models/user.models.js";
 // Create
 export const createAlbum = async (req, res) => {
     console.log("req.body:", req.body);
-    const { name, description, ownerId } = req.body;
+    const { name, description } = req.body;
     try {
-        const newAlbum = new Album({ name, description, ownerId });
+        if (!req.user.userId) {
+            return res.status(404).json({message: "User not found!"});
+        }
+        const newAlbum = new Album({ name, description, ownerId: req.user.userId });
         await newAlbum.save();
         res.status(201).json({message: "Album created successfully."});
     } catch (error) {
@@ -16,8 +19,10 @@ export const createAlbum = async (req, res) => {
 
 // Read
 export const getAllAlbums = async (req, res) => {
+    console.log(req.user.userId);
     try {
-        const allAlbums = await Album.find();
+        const allAlbums = await Album.find({ownerId: req.user.userId});
+        console.log("allAlbums:", allAlbums);
         if (!allAlbums) {
             return res.status(404).json({error: "Albums Not Found."});
         }

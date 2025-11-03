@@ -18,10 +18,10 @@ export const uploadImage = async (req, res) => {
         }
         // Upload to cloudinary
         const result = await cloudinary.uploader.upload(file.path, {folder: "uploads"});
-        console.log("result:", result);
+        // console.log("result:", result);
 
         // Save to mongoDB
-        const newImage = new Image({albumId, imageUrl: result.secure_url, size: result.bytes, imageName, tags, isFavorite, comments});
+        const newImage = new Image({albumId, ownerId: req.user.userId, imageUrl: result.secure_url, size: result.bytes, imageName, tags, isFavorite, comments});
         await newImage.save();
 
         res.status(200).json({message: "Image uploaded successfully.", imageUrl: result.secure_url});
@@ -63,7 +63,7 @@ export const getImageById = async (req, res) => {
 
 export const getAllImages = async (req, res) => {
     try {
-        const allImages = await Image.find();
+        const allImages = await Image.find({ownerId: req.user.userId});
         if (!allImages) {
             return res.status(404).json({error: "No image found."});
         }
@@ -76,7 +76,7 @@ export const getAllImages = async (req, res) => {
 
 export const getAllFavouriteImages = async (req, res) => {
     try {
-        const favoriteImages = await Image.find({isFavourite: true});
+        const favoriteImages = await Image.find({ownerId: req.user.userId, isFavourite: true});
         if (!favoriteImages) {
             return res.status(404).json({error: "No image found."});
         }
